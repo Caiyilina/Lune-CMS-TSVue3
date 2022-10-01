@@ -8,10 +8,13 @@
 </template>
 <script>
 import { defineComponent } from "vue";
-import { HelloWorld } from "./components/HelloWorld.vue";
+// import { HelloWorld } from "./components/HelloWorld.vue";
+
 export default defineComponent({
   name: "App"
 });
+
+console.log("哈哈哈哈哈哈哈哈");
 </script>
 <style lang="less">
 #app {
