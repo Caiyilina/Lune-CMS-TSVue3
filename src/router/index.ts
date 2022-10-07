@@ -9,11 +9,19 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/login",
-    component: () => import("@/views/login/login.vue")
+    component: () => import("@/views/login/login.vue"),
+    name: "login"
   },
   {
     path: "/main",
-    component: () => import("@/views/main/main.vue")
+    component: () => import("@/views/main/main.vue"),
+    name: "main"
+    // children: [] ,根据userMenus来决定的
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    component: () => import("@/views/not-found/not-found.vue"),
+    name: "not-found"
   }
 ];
 
@@ -23,6 +31,7 @@ const router = createRouter({
   routes
 });
 
+// 导航守卫
 router.beforeEach((to) => {
   if (to.path !== "/login") {
     // 只有不是登录页，判断有没有token

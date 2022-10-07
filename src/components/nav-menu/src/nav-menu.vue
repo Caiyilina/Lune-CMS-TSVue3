@@ -26,7 +26,10 @@
             </template>
             <!-- 二级菜单遍历里面的item -->
             <template v-for="subItem in item.children" :key="subItem.id">
-              <el-menu-item :index="subItem.id + ''">
+              <el-menu-item
+                :index="subItem.id + ''"
+                @click="handleItemClick(subItem)"
+              >
                 <el-icon v-if="subItem.icon">
                   <component :is="iconString(subItem.icon)"></component>
                 </el-icon>
@@ -37,7 +40,7 @@
         </template>
         <!-- 一级菜单 -->
         <template v-else-if="item.type === 2">
-          <el-menu-item :index="item.id + ''">
+          <el-menu-item :index="item.id + ''" @click="handleItemClick(item)">
             <el-icon v-if="item.icon">
               <component :is="iconString(item.icon)"></component>
             </el-icon>
@@ -52,6 +55,7 @@
 <script lang="ts">
 import { defineComponent, computed } from "vue";
 import { useStore } from "@/store/index"; //使用自己封装的useStore，因为vuex对ts支持差，拿到的userStore类型是any，没有类型限制
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "nav-menu",
   props: {
@@ -62,13 +66,22 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+    const router = useRouter();
     const userMenus = computed(() => store.state.login.userMenus);
 
     // 将el-icon-x 转为 x
     const iconString = (icon: string) => {
       return icon.substring(8);
     };
-    return { userMenus, iconString };
+
+    const handleItemClick = (item: any) => {
+      // console.log("点击的菜单：", item);
+      router.push({
+        path: item.url ?? "/not-found"
+      });
+    };
+
+    return { userMenus, iconString, handleItemClick };
   }
 });
 </script>

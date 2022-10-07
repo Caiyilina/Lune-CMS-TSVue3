@@ -1,5 +1,6 @@
 import { Module } from "vuex";
 import localCache from "@/utils/cache";
+import { mapMenusToRoutes } from "@/utils/map-menus";
 import type { ILoginState } from "./types";
 
 import type { IRootState } from "../types";
@@ -29,6 +30,14 @@ const loginModule: Module<ILoginState, IRootState> = {
     },
     changeUserMenus(state, userMenus: any) {
       state.userMenus = userMenus;
+      // 将userMenus映射到routes
+      const routes = mapMenusToRoutes(userMenus);
+      console.log("菜单映射的routes:", routes);
+
+      // 将routes 添加到 router.main.children
+      routes.forEach((route) => {
+        router.addRoute("main", route);
+      });
     }
   },
   getters: {},
