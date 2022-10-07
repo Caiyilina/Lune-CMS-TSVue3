@@ -1,8 +1,8 @@
 <template>
   <div class="login-panel">
     <h1 class="title">后台管理系统</h1>
-    <el-tabs type="border-card" stretch>
-      <el-tab-pane>
+    <el-tabs type="border-card" stretch v-model="currentTab">
+      <el-tab-pane name="account">
         <template #label>
           <span>
             <el-icon><UserFilled /></el-icon>
@@ -11,14 +11,14 @@
         </template>
         <login-account ref="accountRef" />
       </el-tab-pane>
-      <el-tab-pane>
+      <el-tab-pane name="phone">
         <template #label>
           <span>
             <el-icon><Iphone /></el-icon>
             <span>手机登录</span>
           </span>
         </template>
-        <login-phone />
+        <login-phone ref="phoneRef" />
       </el-tab-pane>
     </el-tabs>
 
@@ -35,24 +35,39 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { UserFilled, Iphone } from "@element-plus/icons-vue";
 import LoginAccount from "./login-account.vue";
 import LoginPhone from "./login-phone.vue";
 
 export default defineComponent({
   name: "login-panel",
-  components: { UserFilled, Iphone, LoginAccount, LoginPhone },
+  components: { LoginAccount, LoginPhone },
   setup() {
     const isKeepPassword = ref(false);
 
     // 获取account组件实例的组件类型
     const accountRef = ref<InstanceType<typeof LoginAccount>>();
+    const phoneRef = ref<InstanceType<typeof LoginAccount>>();
+
+    const currentTab = ref<string>("account"); //当前选中的tab项
 
     const handleLoginClick = () => {
-      console.log("立即登录");
-      accountRef.value?.loginAction();
+      console.log("立即登录", currentTab.value);
+      if (currentTab.value === "account") {
+        console.log(accountRef.value);
+        accountRef.value?.loginAction(isKeepPassword.value);
+      } else {
+        console.log(phoneRef.value);
+
+        phoneRef.value?.loginAction(isKeepPassword.value);
+      }
     };
-    return { isKeepPassword, handleLoginClick, accountRef };
+    return {
+      isKeepPassword,
+      handleLoginClick,
+      accountRef,
+      phoneRef,
+      currentTab
+    };
   }
 });
 </script>

@@ -1,12 +1,32 @@
-import { createStore } from "vuex";
+import { createStore, Store, useStore as useVuexStore } from "vuex";
+import type { IRootState, IStoreType } from "./types";
 
-export default createStore({
+import login from "./login/login";
+
+const store = createStore<IRootState>({
   state: () => {
     return {
-      name: "Lune"
+      name: "Lune",
+      age: 15,
+      height: 199
     };
   },
-  mutations: {},
+  mutations: {
+    changeName(state) {
+      console.log(state);
+    }
+  },
   actions: {},
-  modules: {}
+  modules: { login }
 });
+
+export function setupStore() {
+  //  对store进行初始化
+  store.dispatch("login/loadLocalLogin"); //加载登录相关的信息，这样网页刷新后，vuex中存储的登录信息可以重新加载
+}
+
+export function useStore(): Store<IStoreType> {
+  return useVuexStore();
+}
+
+export default store;

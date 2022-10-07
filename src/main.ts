@@ -10,6 +10,8 @@ import "element-plus/dist/index.css";
 import "normalize.css"; //样式重置
 import "./assets/css/base.css";
 
+import { setupStore } from "./store";
+
 // import ylRequest from "./service";
 
 /* ylRequest.request({
@@ -44,11 +46,12 @@ ylRequest
   }); */
 
 const app = createApp(App);
-// import { globalRegister } from "./global/index";
+import { globalRegister } from "./global/index";
 // globalRegister(app);
-// app.use(globalRegister); //注册elementplus
+app.use(globalRegister); //注册elementplus、icon
 
 app.use(store);
 app.use(router);
 app.use(ElementPlus);
+setupStore(); //初始化store
 app.mount("#app");

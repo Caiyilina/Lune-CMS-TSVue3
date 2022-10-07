@@ -1,8 +1,22 @@
 // const path = require("path");
 
 module.exports = {
-  outputDir: "./build",
+  // outputDir: "./build",
   // publicPath: "./", //部署到服务器不要改，测试打包环境
+
+  // 解决跨域  代理
+  devServer: {
+    proxy: {
+      "^/api": {
+        target: "http://152.136.185.210:5000",
+        pathRewrite: {
+          "^/api": ""
+        },
+        changeOrigin: true
+      }
+    }
+  },
+
   configureWebpack: {
     resolve: {
       alias: {

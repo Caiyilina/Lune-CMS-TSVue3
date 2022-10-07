@@ -36,7 +36,7 @@ class YLRequest {
     // 所有的实例对象都有的拦截器
     this.instance.interceptors.request.use(
       (res) => {
-        console.log("所有的实例对象都有的拦截器-请求拦截成功", res);
+        // console.log("所有的实例对象都有的拦截器-请求拦截成功", res);
         if (this.showLoading) {
           //showLoading存在 才展示loading
           this.loading = ElLoading.service({
@@ -48,14 +48,12 @@ class YLRequest {
         return res;
       },
       (err) => {
-        console.log("所有的实例对象都有的拦截器-请求拦截失败");
+        // console.log("所有的实例对象都有的拦截器-请求拦截失败");
         return err;
       }
     );
     this.instance.interceptors.response.use(
       (res) => {
-        console.log("所有的实例对象都有的拦截器-响应拦截成功");
-
         // 将loading移除
         this.loading?.close();
 
@@ -67,8 +65,6 @@ class YLRequest {
         }
       },
       (err) => {
-        console.log("所有的实例对象都有的拦截器-响应拦截失败");
-
         // 将loading移除
         this.loading?.close();
 
