@@ -2,6 +2,9 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router"; // type：声明导入的是type类型
 import localCache from "@/utils/cache";
 
+/* import { mapMenusToRoutes } from "@/utils/map-menus";
+import store from "@/store"; */
+
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
@@ -39,6 +42,21 @@ router.beforeEach((to) => {
     if (!token) {
       return "/login";
     }
+
+    console.log("666：", router.getRoutes());
+
+    console.log("即将要跳转的：", to);
+
+    /*   const userMenus = (store.state as any).login.userMenus;
+
+    // 将userMenus映射到routes
+    const routes = mapMenusToRoutes(userMenus);
+    console.log("routes 菜单映射的routes:", routes);
+
+    // 将routes 添加到 router.main.children
+    routes.forEach((route) => {
+      router.addRoute("main", route);
+    }); */
   }
 });
 

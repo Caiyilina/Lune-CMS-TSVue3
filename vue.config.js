@@ -4,7 +4,7 @@ module.exports = {
   // outputDir: "./build",
   // publicPath: "./", //部署到服务器不要改，测试打包环境
 
-  // 解决跨域  代理
+  // 解决跨域
   devServer: {
     proxy: {
       "^/api": {
@@ -15,6 +15,7 @@ module.exports = {
         changeOrigin: true
       }
     }
+    // historyApiFallBack: true
   },
 
   configureWebpack: {

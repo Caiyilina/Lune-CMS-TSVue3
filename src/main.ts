@@ -51,7 +51,7 @@ import { globalRegister } from "./global/index";
 app.use(globalRegister); //注册elementplus、icon
 
 app.use(store);
+setupStore(); //初始化store
 app.use(router);
 app.use(ElementPlus);
-setupStore(); //初始化store
 app.mount("#app");

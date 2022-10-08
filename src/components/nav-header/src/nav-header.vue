@@ -5,7 +5,13 @@
     </el-icon>
 
     <div class="content">
-      <div>面包屑</div>
+      <div>
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item :to="{ path: '/' }">homepage</el-breadcrumb-item>
+          <el-breadcrumb-item><a href="/"> management</a></el-breadcrumb-item>
+          <el-breadcrumb-item> list</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
       <user-info />
     </div>
   </div>
