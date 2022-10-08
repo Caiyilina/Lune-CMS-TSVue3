@@ -77,7 +77,7 @@ class YLRequest {
     );
   }
 
-  request<T>(config: YLRequestConfig<T>): Promise<T> {
+  request<T = any>(config: YLRequestConfig<T>): Promise<T> {
     return new Promise((resolve, reject) => {
       // 1、单个请求对config的处理
       if (config.interceptors?.requestInterceptor) {
@@ -109,19 +109,19 @@ class YLRequest {
     });
   }
 
-  get<T>(config: YLRequestConfig<T>): Promise<T> {
+  get<T = any>(config: YLRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: "GET" });
   }
-  post<T>(config: YLRequestConfig<T>): Promise<T> {
+  post<T = any>(config: YLRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: "POST" });
   }
-  push<T>(config: YLRequestConfig<T>): Promise<T> {
+  push<T = any>(config: YLRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: "PUSH" });
   }
-  delete<T>(config: YLRequestConfig<T>): Promise<T> {
+  delete<T = any>(config: YLRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: "DELETE" });
   }
-  patch<T>(config: YLRequestConfig<T>): Promise<T> {
+  patch<T = any>(config: YLRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: "PATCH" });
   }
 }

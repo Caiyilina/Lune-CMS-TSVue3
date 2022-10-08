@@ -5,26 +5,29 @@
     </el-icon>
 
     <div class="content">
-      <div>
-        <el-breadcrumb separator="/">
-          <el-breadcrumb-item :to="{ path: '/' }">homepage</el-breadcrumb-item>
-          <el-breadcrumb-item><a href="/"> management</a></el-breadcrumb-item>
-          <el-breadcrumb-item> list</el-breadcrumb-item>
-        </el-breadcrumb>
-      </div>
+      <yl-bread-crumb :breadCrumbs="breadCrumbs" />
       <user-info />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import UserInfo from "./user-info.vue";
+
+import YlBreadCrumb, { IBreadCrumb } from "@/base-ui/bread-crumb";
+import { useStore } from "@/store";
+
+import { pathMapBreadCrumbs } from "@/utils/map-menus";
+import { useRoute } from "vue-router";
+
 export default defineComponent({
-  components: { UserInfo },
+  components: { UserInfo, YlBreadCrumb },
   name: "nav-header",
   emits: ["foldChange"],
   setup(props, { emit }) {
+    const store = useStore();
+    const route = useRoute();
     const isFold = ref(false);
     const iconName = ref("expand");
     const handleFoldClick = () => {
@@ -38,9 +41,19 @@ export default defineComponent({
       emit("foldChange", isFold.value); //发送事件给父组件
     };
 
+    // 面包屑的数据
+    const breadCrumbs = computed(() => {
+      const userMenus = store.state.login.userMenus;
+      const currentPath = route.path;
+      return pathMapBreadCrumbs(userMenus, currentPath);
+    });
+
+    console.log(breadCrumbs);
+
     return {
       isFold,
       iconName,
+      breadCrumbs,
       handleFoldClick
     };
   }

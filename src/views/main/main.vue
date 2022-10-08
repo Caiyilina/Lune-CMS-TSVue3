@@ -24,7 +24,7 @@ import NavMenu from "@/components/nav-menu";
 import NavHeader from "@/components/nav-header";
 
 export default defineComponent({
-  name: "main",
+  name: "yl-main",
   components: { NavMenu, NavHeader },
   setup() {
     const isCollapse = ref(false);

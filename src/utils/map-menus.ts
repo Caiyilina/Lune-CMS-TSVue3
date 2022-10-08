@@ -1,4 +1,7 @@
+import { IBreadCrumb } from "@/base-ui/bread-crumb";
 import { RouteRecordRaw } from "vue-router";
+
+let firstMenu: any = null; //第一个菜单
 
 export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = [];
@@ -19,6 +22,9 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
       if (menu.type === 2) {
         const route = allRoutes.find((route) => route.path === menu.url); //找到所有routes中 路径跟 菜单的url 一样的 路由
         if (route) routes.push(route);
+        if (firstMenu === null) {
+          firstMenu = menu;
+        }
       } else {
         _recurseGetRoute(menu.children);
       }
@@ -29,3 +35,63 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
 
   return routes;
 }
+
+// 根据路径匹配面包屑
+export function pathMapBreadCrumbs(userMenus: any[], currentPath: string): any {
+  const breadCrumbs: IBreadCrumb[] = [];
+  pathMapToMenu(userMenus, currentPath, breadCrumbs);
+  return breadCrumbs;
+}
+
+// 路径匹配菜单
+export function pathMapToMenu(
+  userMenus: any[],
+  currentPath: string,
+  breadCrumbs?: IBreadCrumb[]
+): any {
+  for (const menu of userMenus) {
+    if (menu.type == 1) {
+      const findMenu = pathMapToMenu(menu.children ?? [], currentPath);
+      if (findMenu) {
+        breadCrumbs?.push({ name: menu.name });
+        breadCrumbs?.push({ name: findMenu.name });
+        return findMenu;
+      }
+    } else if (menu.type === 2 && menu.url === currentPath) {
+      return menu;
+    }
+  }
+}
+
+/*
+// 根据路径匹配面包屑
+export function pathMapBreadCrumbs(userMenus: any[], currentPath: string): any {
+  const breadCrumbs: IBreadCrumb[] = [];
+  for (const menu of userMenus) {
+    if (menu.type == 1) {
+      const findMenu = pathMapToMenu(menu.children ?? [], currentPath);
+      if (findMenu) {
+        breadCrumbs.push({ name: menu.name, path: menu.url });
+        breadCrumbs.push({ name: findMenu.name, path: findMenu.url });
+        return findMenu;
+      }
+    } else if (menu.type === 2 && menu.url === currentPath) {
+      return menu;
+    }
+  }
+}
+
+// 路径匹配菜单
+export function pathMapToMenu(userMenus: any[], currentPath: string): any {
+  for (const menu of userMenus) {
+    if (menu.type == 1) {
+      const findMenu = pathMapToMenu(menu.children ?? [], currentPath);
+      if (findMenu) {
+        return findMenu;
+      }
+    } else if (menu.type === 2 && menu.url === currentPath) {
+      return menu;
+    }
+  }
+} */
+export { firstMenu };

@@ -5,7 +5,7 @@
       <span v-if="!collapse" class="title">Vue3+Ts</span>
     </div>
     <el-menu
-      default-active="2"
+      :default-active="defaultValue"
       :collapse="collapse"
       class="el-menu-vertical"
       background-color="#0c2135"
@@ -53,9 +53,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref } from "vue";
 import { useStore } from "@/store/index"; //使用自己封装的useStore，因为vuex对ts支持差，拿到的userStore类型是any，没有类型限制
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import { pathMapToMenu } from "@/utils/map-menus";
 export default defineComponent({
   name: "nav-menu",
   props: {
@@ -67,12 +68,19 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
+    const route = useRoute();
+    const currentPath = route.path;
     const userMenus = computed(() => store.state.login.userMenus);
 
     // 将el-icon-x 转为 x
     const iconString = (icon: string) => {
       return icon.substring(8);
     };
+
+    // data
+    const menu = pathMapToMenu(userMenus.value, currentPath);
+
+    const defaultValue = ref(menu.id + "");
 
     const handleItemClick = (item: any) => {
       // console.log("点击的菜单：", item);
@@ -81,7 +89,7 @@ export default defineComponent({
       });
     };
 
-    return { userMenus, iconString, handleItemClick };
+    return { userMenus, defaultValue, iconString, handleItemClick };
   }
 });
 </script>

@@ -1,5 +1,9 @@
 <template>
   <div class="yl-form">
+    <div class="header">
+      <!-- 具名插槽，父组件可以自定义组件 -->
+      <slot name="header"></slot>
+    </div>
     <el-form :label-width="labelWidth">
       <el-row>
         <template v-for="item in formItems" :key="item.id">
@@ -15,6 +19,8 @@
                 <el-input
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
+                  :show-password="item.type === 'password'"
+                  v-model="formData[`${item.field}`]"
                 />
               </template>
               <template v-else-if="item.type === 'select'">
@@ -22,14 +28,23 @@
                   :placeholder="item.placeholder"
                   style="width: 100%"
                   v-bind="item.otherOptions"
+                  v-model="formData[`${item.field}`]"
                 >
-                  <el-option v-for="option in item.options" :key="option.value">
+                  <el-option
+                    v-for="option in item.options"
+                    :key="option.value"
+                    :value="option.value"
+                  >
                     {{ option.label }}
                   </el-option>
                 </el-select>
               </template>
               <template v-else-if="item.type === 'datepicker'">
-                <el-date-picker style="width: 100%" v-bind="item.otherOptions">
+                <el-date-picker
+                  style="width: 100%"
+                  v-bind="item.otherOptions"
+                  v-model="formData[`${item.field}`]"
+                >
                 </el-date-picker>
               </template>
             </el-form-item>
@@ -37,14 +52,17 @@
         </template>
       </el-row>
     </el-form>
+    <div class="footer">
+      <slot name="footer"></slot>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { IFormItem, IForm } from "../types";
+import { defineComponent, PropType, ref, watch } from "vue";
+import { IFormItem } from "../types";
 export default defineComponent({
-  name: "form",
+  name: "yl-form",
   props: {
     formItems: {
       type: Array as PropType<IFormItem[]>,
@@ -67,10 +85,22 @@ export default defineComponent({
         lg: 8,
         xl: 6
       })
-    }
+    },
+    modelValue: { type: Object, required: true }
   },
-  setup() {
-    return {};
+  emits: ["update:modelValue"],
+  setup(props, { emit }) {
+    const formData = ref({ ...props.modelValue }); //深拷贝
+
+    // 深度监听formData，改变时发送事件
+    watch(
+      formData,
+      (newValue) => {
+        emit("update:modelValue", newValue);
+      },
+      { deep: true }
+    );
+    return { formData };
   }
 });
 </script>

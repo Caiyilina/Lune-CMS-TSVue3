@@ -1,6 +1,8 @@
 import ylRequest from "../index";
 
-import type { IAccount, IDataType, ILoginResult, IUserInfo } from "./type";
+import type { IAccount, ILoginResult, IUserInfo } from "./type";
+
+import type { IDataType } from "../type";
 
 enum LoginAPI {
   AccountLogin = "/login",
