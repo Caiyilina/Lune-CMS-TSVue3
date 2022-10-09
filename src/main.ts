@@ -48,10 +48,11 @@ ylRequest
 const app = createApp(App);
 import { globalRegister } from "./global/index";
 // globalRegister(app);
-app.use(globalRegister); //注册elementplus、icon
+app.use(globalRegister); //注册elementplus、icon、全局属性
 
 app.use(store);
 setupStore(); //初始化store
 app.use(router);
 app.use(ElementPlus);
+
 app.mount("#app");
