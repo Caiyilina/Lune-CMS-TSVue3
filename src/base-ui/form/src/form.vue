@@ -16,11 +16,13 @@
               <template
                 v-if="item.type === 'input' || item.type === 'password'"
               >
+                <!-- 使用双向绑定： v-model="formData[`${item.field}`]" -->
                 <el-input
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   :show-password="item.type === 'password'"
-                  v-model="formData[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 />
               </template>
               <template v-else-if="item.type === 'select'">
@@ -28,7 +30,8 @@
                   :placeholder="item.placeholder"
                   style="width: 100%"
                   v-bind="item.otherOptions"
-                  v-model="formData[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 >
                   <el-option
                     v-for="option in item.options"
@@ -43,7 +46,8 @@
                 <el-date-picker
                   style="width: 100%"
                   v-bind="item.otherOptions"
-                  v-model="formData[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 >
                 </el-date-picker>
               </template>
@@ -90,17 +94,28 @@ export default defineComponent({
   },
   emits: ["update:modelValue"],
   setup(props, { emit }) {
-    const formData = ref({ ...props.modelValue }); //深拷贝
+    /* 方法1；使用双向绑定
+    const formData = ref({ ...props.modelValue }); //浅拷贝
 
-    // 深度监听formData，改变时发送事件
     watch(
       formData,
       (newValue) => {
+        console.log("监听form中的表单", newValue);
         emit("update:modelValue", newValue);
       },
-      { deep: true }
+      {
+        deep: true
+      }
     );
-    return { formData };
+    return { formData }; */
+
+    // 方法2
+    const handleValueChange = (value: any, field: string) => {
+      console.log(value, field);
+      emit("update:modelValue", { ...props.modelValue, [field]: value });
+    };
+
+    return { handleValueChange };
   }
 });
 </script>

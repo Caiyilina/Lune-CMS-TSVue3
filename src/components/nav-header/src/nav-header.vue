@@ -15,7 +15,7 @@
 import { computed, defineComponent, ref } from "vue";
 import UserInfo from "./user-info.vue";
 
-import YlBreadCrumb, { IBreadCrumb } from "@/base-ui/bread-crumb";
+import YlBreadCrumb from "@/base-ui/bread-crumb";
 import { useStore } from "@/store";
 
 import { pathMapBreadCrumbs } from "@/utils/map-menus";
