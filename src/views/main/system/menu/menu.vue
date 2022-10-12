@@ -17,9 +17,7 @@
         </el-icon>
       </template>
       <template #menuType="scope">
-        <span v-if="scope.row.type == '1' || scope.row.type == '2'">
-          菜单
-        </span>
+        <span v-if="scope.row.type === 1 || scope.row.type === 2"> 菜单 </span>
         <el-button v-else-if="scope.row.type == '3'" size="small" plain
           >按钮</el-button
         >
@@ -40,7 +38,7 @@ import { contentTableConfig } from "./config/content.config";
 import { usePageSearch } from "@/hooks/userPageSearch";
 
 export default defineComponent({
-  name: "user",
+  name: "menu",
   components: { PageContent },
   setup() {
     const [pageContentRef, HandleResetClick, HandleQueryClick] =

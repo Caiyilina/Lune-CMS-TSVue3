@@ -8,7 +8,9 @@
     >
       <!-- 1、header中的插槽 -->
       <template #headerHandler>
-        <el-button type="primary">新建{{ contentTableConfig.title }}</el-button>
+        <el-button type="primary" v-if="isCreate"
+          >新建{{ contentTableConfig.title }}</el-button
+        >
       </template>
       <!-- 2、表格列中的插槽 -->
 
@@ -21,10 +23,20 @@
 
       <template #handler>
         <div class="handle-btn">
-          <el-button icon="edit" size="small" type="primary" link
+          <el-button
+            icon="edit"
+            size="small"
+            type="primary"
+            link
+            v-if="isUpdate"
             >编辑</el-button
           >
-          <el-button icon="delete" size="small" type="danger" link
+          <el-button
+            icon="delete"
+            size="small"
+            type="danger"
+            link
+            v-if="isDelete"
             >删除</el-button
           >
         </div>
@@ -48,6 +60,7 @@
 import { defineComponent, computed, ref, watch } from "vue";
 import YlTable from "@/base-ui/table";
 import { useStore } from "@/store";
+import { usePermission } from "@/hooks/usePermission";
 export default defineComponent({
   name: "page-content",
   props: {
@@ -61,6 +74,12 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
 
+    // 0、获取操作的权限
+    const isCreate = usePermission(props.pageName, "create");
+    const isUpdate = usePermission(props.pageName, "update");
+    const isDelete = usePermission(props.pageName, "delete");
+    const isQuery = usePermission(props.pageName, "query");
+
     // 1、双向绑定pageInfo
     const pageInfo = ref({ currentPage: 0, pageSize: 10 });
     watch(pageInfo, () => getPageData());
@@ -68,7 +87,8 @@ export default defineComponent({
     //2、 发送网络请求
     const getPageData = (queryInfo: any = {}) => {
       console.log("发送getPageData请求");
-
+      // 检查是否有查询权限
+      if (!isQuery) return false;
       store.dispatch("system/getPageListAction", {
         pageName: props.pageName,
         queryInfo: {
@@ -103,7 +123,11 @@ export default defineComponent({
       dataCount,
       pageInfo,
       otherPropSlots,
-      getPageData
+      getPageData,
+      isCreate,
+      isUpdate,
+      isDelete,
+      isQuery
     };
   }
 });
