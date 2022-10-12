@@ -9,7 +9,7 @@
           <el-button type="info" icon="Refresh" @click="handleResetClick"
             >重置</el-button
           >
-          <el-button type="primary" icon="Search" @click="handleSearch"
+          <el-button type="primary" icon="Search" @click="handleQueryClick"
             >搜索</el-button
           >
         </div>
@@ -31,7 +31,8 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  emits: ["resetBtnClick", "queryBtnClick"],
+  setup(props, { emit }) {
     // 1、双向绑定过的属性应该是由配置项的field来决定的
     const formItems = props.searchFormConfig?.formItems ?? [];
     const formOriginData: any = {};
@@ -43,17 +44,20 @@ export default defineComponent({
 
     // 2、方法
     const handleResetClick = () => {
-      // formData.value = formOriginData;  不生效
+      // formData.value = formOriginData;
 
       for (const key in formOriginData) {
         formData.value[`${key}`] = formOriginData[key]; //修改属性的值
       }
       console.log("重置", formData.value);
+
+      emit("resetBtnClick");
     };
-    const handleSearch = () => {
-      console.log();
+    const handleQueryClick = () => {
+      console.log("点击搜索", formData.value);
+      emit("queryBtnClick", formData.value);
     };
-    return { formData, handleResetClick, handleSearch };
+    return { formData, handleResetClick, handleQueryClick };
   }
 });
 </script>

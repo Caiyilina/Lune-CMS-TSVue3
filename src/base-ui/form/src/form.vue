@@ -16,13 +16,14 @@
               <template
                 v-if="item.type === 'input' || item.type === 'password'"
               >
-                <!-- 使用双向绑定： v-model="formData[`${item.field}`]" -->
+                <!-- 1、使用双向绑定： v-model="formData[`${item.field}`]" -->
+                <!-- 2、  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)" -->
                 <el-input
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   :show-password="item.type === 'password'"
-                  :model-value="modelValue[`${item.field}`]"
-                  @update:modelValue="handleValueChange($event, item.field)"
+                  v-model="formData[`${item.field}`]"
                 />
               </template>
               <template v-else-if="item.type === 'select'">
@@ -30,13 +31,14 @@
                   :placeholder="item.placeholder"
                   style="width: 100%"
                   v-bind="item.otherOptions"
-                  :model-value="modelValue[`${item.field}`]"
-                  @update:modelValue="handleValueChange($event, item.field)"
+                  v-model="formData[`${item.field}`]"
+                  value-key="value"
                 >
                   <el-option
                     v-for="option in item.options"
                     :key="option.value"
                     :value="option.value"
+                    :label="option.label"
                   >
                     {{ option.label }}
                   </el-option>
@@ -46,8 +48,7 @@
                 <el-date-picker
                   style="width: 100%"
                   v-bind="item.otherOptions"
-                  :model-value="modelValue[`${item.field}`]"
-                  @update:modelValue="handleValueChange($event, item.field)"
+                  v-model="formData[`${item.field}`]"
                 >
                 </el-date-picker>
               </template>
@@ -94,7 +95,7 @@ export default defineComponent({
   },
   emits: ["update:modelValue"],
   setup(props, { emit }) {
-    /* 方法1；使用双向绑定
+    // 方法1；使用双向绑定
     const formData = ref({ ...props.modelValue }); //浅拷贝
 
     watch(
@@ -107,15 +108,12 @@ export default defineComponent({
         deep: true
       }
     );
-    return { formData }; */
-
+    return { formData };
     // 方法2
-    const handleValueChange = (value: any, field: string) => {
+    /*  const handleValueChange = (value: any, field: string) => {
       console.log(value, field);
       emit("update:modelValue", { ...props.modelValue, [field]: value });
-    };
-
-    return { handleValueChange };
+    }; */
   }
 });
 </script>

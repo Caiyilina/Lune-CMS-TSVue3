@@ -1,5 +1,5 @@
 export const contentTableConfig = {
-  title: "用户列表",
+  title: "用户",
   showIndexColumn: true, //是否展示表格序号
   showSelectColumn: true, //是否展示多选框};
   propList: [

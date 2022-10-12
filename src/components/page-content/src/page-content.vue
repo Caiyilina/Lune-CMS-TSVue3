@@ -1,34 +1,51 @@
 <template>
   <div class="page-content">
-    <yl-table :listData="dataList" v-bind="contentTableConfig">
+    <yl-table
+      :listData="dataList"
+      :dataCount="dataCount"
+      v-bind="contentTableConfig"
+      v-model:page="pageInfo"
+    >
       <!-- 1、header中的插槽 -->
       <template #headerHandler>
-        <el-button type="primary" size="medium">新建用户</el-button>
+        <el-button type="primary">新建{{ contentTableConfig.title }}</el-button>
       </template>
       <!-- 2、表格列中的插槽 -->
-      <template #status="scope">
-        <el-tag size="small" :type="scope.row.enable ? 'success' : 'danger'">
-          {{ scope.row.enable ? "  启用" : "禁用" }}
-        </el-tag>
-      </template>
+
       <template #createAt="scope">
         {{ $filters.formatTime(scope.row.createAt) }}
       </template>
       <template #updateAt="scope">
         {{ $filters.formatTime(scope.row.updateAt) }}
       </template>
+
       <template #handler>
         <div class="handle-btn">
-          <el-button icon="edit" size="mini" type="text">编辑</el-button>
-          <el-button icon="delete" size="mini" type="text">删除</el-button>
+          <el-button icon="edit" size="small" type="primary" link
+            >编辑</el-button
+          >
+          <el-button icon="delete" size="small" type="danger" link
+            >删除</el-button
+          >
         </div>
+      </template>
+
+      <!-- 3、剩余的动态插槽 -->
+      <template
+        v-for="item in otherPropSlots"
+        :key="item.prop"
+        #[item.slotName]="scope"
+      >
+        <template v-if="item.slotName">
+          <slot :name="item.slotName" :row="scope.row"> </slot>
+        </template>
       </template>
     </yl-table>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref, watch } from "vue";
 import YlTable from "@/base-ui/table";
 import { useStore } from "@/store";
 export default defineComponent({
@@ -44,19 +61,50 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
 
-    store.dispatch("system/getPageListAction", {
-      pageName: props.pageName,
-      queryInfo: {
-        offset: 0,
-        size: 10
-      }
-    });
+    // 1、双向绑定pageInfo
+    const pageInfo = ref({ currentPage: 0, pageSize: 10 });
+    watch(pageInfo, () => getPageData());
 
+    //2、 发送网络请求
+    const getPageData = (queryInfo: any = {}) => {
+      console.log("发送getPageData请求");
+
+      store.dispatch("system/getPageListAction", {
+        pageName: props.pageName,
+        queryInfo: {
+          offset: pageInfo.value.currentPage * pageInfo.value.pageSize,
+          size: pageInfo.value.pageSize,
+          ...queryInfo
+        }
+      });
+    };
+    getPageData();
+
+    //3、 从vuex中获取数据
     const dataList = computed(() =>
       store.getters[`system/pageListData`](props.pageName)
     );
-    // const usersCount = computed(() => store.state.system.usersCount);
-    return { dataList };
+    const dataCount = computed(() =>
+      store.getters[`system/pageCountData`](props.pageName)
+    );
+
+    // 4、获取其他的动态插槽名称
+    const otherPropSlots = props.contentTableConfig?.propList.filter(
+      (item: any) => {
+        if (item.slotName === "createAt") return false;
+        if (item.slotName === "updateAt") return false;
+        if (item.slotName === "handler") return false;
+        return true;
+      }
+    );
+
+    return {
+      dataList,
+      dataCount,
+      pageInfo,
+      otherPropSlots,
+      getPageData
+    };
   }
 });
 </script>

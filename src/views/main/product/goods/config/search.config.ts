@@ -7,34 +7,41 @@ export const searchFormConfig: IForm = {
       id: 1,
       field: "name",
       type: "input",
-      label: "用户名",
+      label: "商品名称",
       rules: [],
-      placeholder: "请输入用户名"
+      placeholder: "请输入商品名称"
     },
     {
       id: 2,
-      field: "realname",
+      field: "newPrice",
       type: "input",
-      label: "真实姓名",
-      placeholder: "请输入真实姓名"
+      label: "现价",
+      placeholder: "请输入现价"
     },
     {
       id: 3,
-      field: "cellphone",
+      field: "desc",
       type: "input",
-      label: "电话号码",
-      placeholder: "请输入电话号码"
+      label: "商品描述",
+      placeholder: "请输入商品描述"
     },
     {
       id: 4,
-      field: "enable",
+      field: "status",
       type: "select",
-      label: "用户状态",
-      placeholder: "请选择用户状态",
+      label: "商品状态",
+      placeholder: "请选择商品状态",
       options: [
         { label: "启用", value: 1 },
         { label: "禁用", value: 0 }
       ]
+    },
+    {
+      id: 6,
+      field: "address",
+      type: "input",
+      label: "发货地",
+      placeholder: "请输入发货地"
     },
     {
       id: 5,
