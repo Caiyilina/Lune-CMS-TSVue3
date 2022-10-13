@@ -6,8 +6,8 @@ export const contentTableConfig = {
     { prop: "name", label: "菜单名称", minWidth: "150" },
     { prop: "type", label: "菜单类型", minWidth: "80", slotName: "menuType" },
     { prop: "url", label: "菜单url", minWidth: "200" },
-    { prop: "icon", label: "菜单icon", minWidth: "60", slotName: "icon" },
-    { prop: "permission", label: "按钮权限", minWidth: "100" },
+    { prop: "icon", label: "菜单icon", minWidth: "80", slotName: "icon" },
+    { prop: "permission", label: "按钮权限", minWidth: "180" },
 
     {
       prop: "createAt",

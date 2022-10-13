@@ -21,7 +21,7 @@
         {{ $filters.formatTime(scope.row.updateAt) }}
       </template>
 
-      <template #handler>
+      <template #handler="scope">
         <div class="handle-btn">
           <el-button
             icon="edit"
@@ -29,6 +29,7 @@
             type="primary"
             link
             v-if="isUpdate"
+            @click="handleUpdateClick(scope.row)"
             >编辑</el-button
           >
           <el-button
@@ -37,6 +38,7 @@
             type="danger"
             link
             v-if="isDelete"
+            @click="handleDeleteClick(scope.row)"
             >删除</el-button
           >
         </div>
@@ -58,6 +60,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, watch } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 import YlTable from "@/base-ui/table";
 import { useStore } from "@/store";
 import { usePermission } from "@/hooks/usePermission";
@@ -81,7 +84,7 @@ export default defineComponent({
     const isQuery = usePermission(props.pageName, "query");
 
     // 1、双向绑定pageInfo
-    const pageInfo = ref({ currentPage: 0, pageSize: 10 });
+    const pageInfo = ref({ currentPage: 1, pageSize: 10 });
     watch(pageInfo, () => getPageData());
 
     //2、 发送网络请求
@@ -92,7 +95,7 @@ export default defineComponent({
       store.dispatch("system/getPageListAction", {
         pageName: props.pageName,
         queryInfo: {
-          offset: pageInfo.value.currentPage * pageInfo.value.pageSize,
+          offset: (pageInfo.value.currentPage - 1) * pageInfo.value.pageSize,
           size: pageInfo.value.pageSize,
           ...queryInfo
         }
@@ -118,6 +121,33 @@ export default defineComponent({
       }
     );
 
+    // 5、编辑、删除按钮
+    const handleUpdateClick = (item: any) => {
+      console.log("编辑：", item);
+    };
+    const handleDeleteClick = (item: any) => {
+      console.log("删除：", item);
+
+      ElMessageBox.confirm("确定删除该数据", "删除提醒", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // 调用store中的请求
+          store.dispatch("system/deletePageDataAction", {
+            pageName: props.pageName,
+            id: item.id
+          });
+        })
+        .catch(() => {
+          ElMessage({
+            type: "info",
+            message: "取消删除"
+          });
+        });
+    };
+
     return {
       dataList,
       dataCount,
@@ -127,7 +157,9 @@ export default defineComponent({
       isCreate,
       isUpdate,
       isDelete,
-      isQuery
+      isQuery,
+      handleUpdateClick,
+      handleDeleteClick
     };
   }
 });

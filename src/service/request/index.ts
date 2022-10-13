@@ -94,7 +94,6 @@ class YLRequest {
           if (config.interceptors?.responseInterceptor) {
             res = config.interceptors.responseInterceptor(res);
           }
-          console.log("ceshi:", res);
           // 2、把showLoading设置为true，这样不会影响下一个请求
           this.showLoading = DEFAULT_LOADING;
 

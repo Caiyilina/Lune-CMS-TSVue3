@@ -1,8 +1,8 @@
 import { IRootState } from "@/store/types";
 import { Module } from "vuex";
 import { ISystemState } from "./types";
-
-import { getPageListData } from "@/service/main/system/system";
+import { deletePageData, getPageListData } from "@/service/main/system/system";
+import { ElMessage } from "element-plus";
 const systemModule: Module<ISystemState, IRootState> = {
   namespaced: true,
   state() {
@@ -80,6 +80,28 @@ const systemModule: Module<ISystemState, IRootState> = {
 
       commit(`change${changePageName}List`, list);
       commit(`change${changePageName}Count`, totalCount);
+    },
+
+    // 删除请求
+    async deletePageDataAction({ dispatch }, payload: any) {
+      // 1、获取pageName和id
+      const { pageName, id } = payload;
+      const pageUrl = `/${pageName}/${id}`;
+
+      // 2、调用删除网络请求
+      await deletePageData(pageUrl).then((res) => {
+        if (res.code === 0) {
+          ElMessage({
+            type: "success",
+            message: "删除成功"
+          });
+        }
+      });
+      // 3、重新请求最新数据
+      dispatch("getPageListAction", {
+        pageName,
+        queryInfo: { offset: 0, size: 10 }
+      });
     }
   }
 };
