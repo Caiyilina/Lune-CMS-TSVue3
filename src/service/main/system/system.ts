@@ -8,9 +8,23 @@ export function getPageListData(url: string, queryInfo: any) {
     data: queryInfo
   });
 }
-// 删除
+// 删除  /users/id
 export function deletePageData(url: string) {
   return ylRequest.delete<IDataType>({
     url: url
+  });
+}
+// 新建
+export function createPageData(url: string, newData: any) {
+  return ylRequest.post<IDataType>({
+    url: url,
+    data: newData
+  });
+}
+// 新建
+export function editPageData(url: string, newData: any) {
+  return ylRequest.patch<IDataType>({
+    url: url,
+    data: newData
   });
 }

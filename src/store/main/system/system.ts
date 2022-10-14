@@ -1,7 +1,12 @@
 import { IRootState } from "@/store/types";
 import { Module } from "vuex";
 import { ISystemState } from "./types";
-import { deletePageData, getPageListData } from "@/service/main/system/system";
+import {
+  createPageData,
+  deletePageData,
+  editPageData,
+  getPageListData
+} from "@/service/main/system/system";
 import { ElMessage } from "element-plus";
 const systemModule: Module<ISystemState, IRootState> = {
   namespaced: true,
@@ -94,6 +99,49 @@ const systemModule: Module<ISystemState, IRootState> = {
           ElMessage({
             type: "success",
             message: "删除成功"
+          });
+        }
+      });
+      // 3、重新请求最新数据
+      dispatch("getPageListAction", {
+        pageName,
+        queryInfo: { offset: 0, size: 10 }
+      });
+    },
+
+    // 新建请求
+    async createPageDataAction({ dispatch }, payload: any) {
+      // 1、获取pageName和newData
+      const { pageName, newData } = payload;
+      const pageUrl = `/${pageName}`;
+
+      // 2、调用创建网络请求
+      await createPageData(pageUrl, newData).then((res) => {
+        if (res.code === 0) {
+          ElMessage({
+            type: "success",
+            message: "新建成功"
+          });
+        }
+      });
+      // 3、重新请求最新数据
+      dispatch("getPageListAction", {
+        pageName,
+        queryInfo: { offset: 0, size: 10 }
+      });
+    },
+    // 编辑请求
+    async editPageDataAction({ dispatch }, payload: any) {
+      // 1、获取pageName和editData
+      const { pageName, editData, id } = payload;
+      const pageUrl = `/${pageName}/${id}`;
+
+      // 2、调用编辑网络请求
+      await editPageData(pageUrl, editData).then((res) => {
+        if (res.code === 0) {
+          ElMessage({
+            type: "success",
+            message: "修改成功"
           });
         }
       });

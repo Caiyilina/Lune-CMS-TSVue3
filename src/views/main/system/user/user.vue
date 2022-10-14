@@ -23,6 +23,7 @@
     <!-- 弹出框 -->
     <page-modal
       ref="pageModalRef"
+      pageName="users"
       :dialogTitle="dialogTitle"
       :defaultInfo="defaultInfo"
       :modalConfig="modalConfigRef"
