@@ -45,7 +45,7 @@ export default defineComponent({
     }
   },
   emits: [],
-  setup(props, { emit }) {
+  setup(props) {
     const dialogVisible = ref(false);
 
     const formData = ref<any>({});

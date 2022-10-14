@@ -51,7 +51,7 @@ const store = createStore<IRootState>({
 export function setupStore() {
   //  对store进行初始化
   store.dispatch("login/loadLocalLogin"); //加载登录相关的信息，这样网页刷新后，vuex中存储的登录信息可以重新加载
-  store.dispatch("getInitialDataAction");
+  // store.dispatch("getInitialDataAction");
 }
 
 export function useStore(): Store<IStoreType> {

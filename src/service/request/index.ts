@@ -3,7 +3,7 @@ import axios from "axios";
 import type { AxiosInstance } from "axios";
 
 import type { YLRequestInterceptors, YLRequestConfig } from "./type";
-import { ElLoading } from "element-plus";
+import { ElLoading, ElMessage } from "element-plus";
 import { LoadingInstance } from "element-plus/lib/components/loading/src/loading";
 
 const DEFAULT_LOADING = true;
@@ -58,6 +58,14 @@ class YLRequest {
         this.loading?.close();
 
         const data = res.data;
+        if (data.code === 400 || data.code === 404) {
+          return ElMessage({
+            type: "warning",
+            message: data.data
+          });
+        }
+        console.log("响应拦截：", res);
+
         if (data.returnCode === "-1001") {
           console.log("请求失败，错误信息");
         } else {
@@ -72,6 +80,7 @@ class YLRequest {
         if (err.response.status === 404) {
           console.log("404错误");
         }
+
         return err;
       }
     );
@@ -94,6 +103,7 @@ class YLRequest {
           if (config.interceptors?.responseInterceptor) {
             res = config.interceptors.responseInterceptor(res);
           }
+
           // 2、把showLoading设置为true，这样不会影响下一个请求
           this.showLoading = DEFAULT_LOADING;
 

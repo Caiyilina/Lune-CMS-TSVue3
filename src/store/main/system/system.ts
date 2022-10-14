@@ -116,14 +116,21 @@ const systemModule: Module<ISystemState, IRootState> = {
       const pageUrl = `/${pageName}`;
 
       // 2、调用创建网络请求
-      await createPageData(pageUrl, newData).then((res) => {
-        if (res.code === 0) {
+      await createPageData(pageUrl, newData)
+        .then((res) => {
+          if (res.code === 0) {
+            ElMessage({
+              type: "success",
+              message: "新建成功"
+            });
+          }
+        })
+        .catch((err) => {
           ElMessage({
-            type: "success",
-            message: "新建成功"
+            type: "error",
+            message: err
           });
-        }
-      });
+        });
       // 3、重新请求最新数据
       dispatch("getPageListAction", {
         pageName,
@@ -137,14 +144,21 @@ const systemModule: Module<ISystemState, IRootState> = {
       const pageUrl = `/${pageName}/${id}`;
 
       // 2、调用编辑网络请求
-      await editPageData(pageUrl, editData).then((res) => {
-        if (res.code === 0) {
+      await editPageData(pageUrl, editData)
+        .then((res) => {
+          if (res.code === 0) {
+            ElMessage({
+              type: "success",
+              message: "修改成功"
+            });
+          }
+        })
+        .catch((err) => {
           ElMessage({
-            type: "success",
-            message: "修改成功"
+            type: "error",
+            message: err
           });
-        }
-      });
+        });
       // 3、重新请求最新数据
       dispatch("getPageListAction", {
         pageName,
