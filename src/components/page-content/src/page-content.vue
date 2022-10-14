@@ -8,7 +8,7 @@
     >
       <!-- 1、header中的插槽 -->
       <template #headerHandler>
-        <el-button type="primary" v-if="isCreate"
+        <el-button type="primary" v-if="isCreate" @click="handleAddClick"
           >新建{{ contentTableConfig.title }}</el-button
         >
       </template>
@@ -74,7 +74,8 @@ export default defineComponent({
     }
   },
   components: { YlTable },
-  setup(props) {
+  emits: ["addBtnClick", "updateBtnClick"],
+  setup(props, { emit }) {
     const store = useStore();
 
     // 0、获取操作的权限
@@ -121,9 +122,14 @@ export default defineComponent({
       }
     );
 
-    // 5、编辑、删除按钮
+    // 5、新建、编辑、删除按钮
+    const handleAddClick = (item: any) => {
+      console.log("新建：", item);
+      emit("addBtnClick");
+    };
     const handleUpdateClick = (item: any) => {
       console.log("编辑：", item);
+      emit("updateBtnClick", item);
     };
     const handleDeleteClick = (item: any) => {
       console.log("删除：", item);
@@ -158,6 +164,7 @@ export default defineComponent({
       isUpdate,
       isDelete,
       isQuery,
+      handleAddClick,
       handleUpdateClick,
       handleDeleteClick
     };

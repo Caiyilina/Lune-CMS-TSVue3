@@ -6,9 +6,10 @@
     </div>
     <el-form :label-width="labelWidth">
       <el-row>
-        <template v-for="item in formItems" :key="item.id">
+        <template v-for="item in formItems" :key="item.field">
           <el-col :span="8" v-bind="colLayout">
             <el-form-item
+              v-if="!item.isHidden"
               :label="item.label"
               :rules="item.rules"
               :style="itemStyle"
