@@ -31,5 +31,5 @@ export const searchFormConfig: IForm = {
       }
     }
   ],
-  itemLayout: { padding: "0.4vw,0.9vw" }
+  itemStyle: { padding: "0.4vw,0.9vw" }
 };

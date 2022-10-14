@@ -1,6 +1,6 @@
 type IFormType = "input" | "password" | "select" | "datepicker";
 export interface IFormItem {
-  id: number;
+  id?: number;
   field: string;
   type: IFormType;
   label: string;
@@ -15,5 +15,5 @@ export interface IForm {
   formItems: IFormItem[];
   labelWidth?: string;
   colLayout?: any;
-  itemLayout?: any;
+  itemStyle?: any;
 }

@@ -25,13 +25,13 @@
       ref="pageModalRef"
       :dialogTitle="dialogTitle"
       :defaultInfo="defaultInfo"
-      :modalConfig="modalConfig"
+      :modalConfig="modalConfigRef"
     ></page-modal>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 
 import PageSearch from "@/components/page-search";
 import PageContent from "@/components/page-content";
@@ -44,6 +44,7 @@ import { modalConfig } from "./config/modal.config";
 
 import { usePageSearch } from "@/hooks/userPageSearch";
 import { usePageModal } from "@/hooks/usePageModal";
+import { useStore } from "@/store";
 
 export default defineComponent({
   name: "user",
@@ -79,7 +80,7 @@ export default defineComponent({
       }
     };*/
 
-    // 1、pageMdal相关的hook逻辑
+    // 1、pageModal相关的hook逻辑
     const newCallback = () => {
       const passwordItem = modalConfig.formItems.find(
         (item) => item.field === "password"
@@ -93,6 +94,30 @@ export default defineComponent({
       passwordItem!.isHidden = true;
     };
 
+    // 2、动态添加部门和角色列表，动态数据需要刷新的可以使用computed实现可响应
+    const store = useStore();
+    // 将modalConfig配置转成响应式的
+    const modalConfigRef = computed(() => {
+      const departmentItem = modalConfig.formItems.find(
+        (item) => item.field === "departmentId"
+      );
+
+      departmentItem!.options = store.state.entireDepartment.map((item) => {
+        return { label: item.name, value: item.id };
+      });
+
+      const roleItem = modalConfig.formItems.find(
+        (item) => item.field === "roleId"
+      );
+      roleItem!.options = store.state.entireRole.map((item) => {
+        return { label: item.name, value: item.id };
+      });
+      console.log("部门：", departmentItem, "角色:", roleItem);
+
+      return modalConfig;
+    });
+
+    //3、调用hook获取公共变量和函数
     const [
       handleAddData,
       handleUpdateData,
@@ -105,6 +130,7 @@ export default defineComponent({
       searchFormConfig,
       contentTableConfig,
       modalConfig,
+      modalConfigRef,
 
       HandleResetClick,
       HandleQueryClick,
