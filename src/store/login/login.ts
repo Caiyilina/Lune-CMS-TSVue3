@@ -75,8 +75,8 @@ const loginModule: Module<ILoginState, IRootState> = {
       // 4、跳转到首页
       router.push("/main");
     },
-    phoneLoginAction({ commit }, payload: any) {
-      console.log("执行手机号登录action", payload);
+    phoneLoginAction(context, payload: any) {
+      console.log("执行手机号登录action", context, payload);
     },
 
     // 加载登录的相关信息

@@ -3,6 +3,8 @@ import type { IRootState, IStoreType } from "./types";
 
 import login from "./login/login";
 import system from "./main/system/system";
+import dashboard from "./main/analysis/dashboard";
+
 import { getPageListData } from "@/service/main/system/system";
 
 const store = createStore<IRootState>({
@@ -12,7 +14,8 @@ const store = createStore<IRootState>({
       age: 15,
       height: 199,
       entireDepartment: [],
-      entireRole: []
+      entireRole: [],
+      entireMenu: []
     };
   },
   mutations: {
@@ -24,11 +27,14 @@ const store = createStore<IRootState>({
     },
     changeEntireRole(state, list) {
       state.entireRole = list;
+    },
+    changeEntireMenu(state, list) {
+      state.entireMenu = list;
     }
   },
   actions: {
     async getInitialDataAction({ commit }) {
-      // 1、请求部门和角色数据
+      // 1、请求部门、角色数据、菜单数据
       const departmentResult = await getPageListData("/department/list", {
         offset: 0,
         size: 1000
@@ -40,12 +46,16 @@ const store = createStore<IRootState>({
       });
       const { list: roleList } = roleResult.data;
 
+      const menuResult = await getPageListData("/menu/list", {});
+      const { list: menuList } = menuResult.data;
+
       // 2、保存数据
       commit("changeEntireDepartment", departmentList);
       commit("changeEntireRole", roleList);
+      commit("changeEntireMenu", menuList);
     }
   },
-  modules: { login, system }
+  modules: { login, system, dashboard }
 });
 
 export function setupStore() {
